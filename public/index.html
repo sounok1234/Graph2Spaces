@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.links line {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
+
+.nodes circle {
+  stroke: black	;
+  stroke-width: 0px;
+}
+text {
+  font-family: sans-serif;
+  font-size: 15px;
+}
+
+</style>
+<svg width="1500" height="1200"></svg>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="/javascript/app.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+
+//create somewhere to put the force directed graph
+var svg = d3.select("svg"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+    
+var nodes_data =  [
+    {
+    "Num": 101,
+    "Name": "Vest.",
+    "Area": 439.13144792628,
+    "Level": 1
+  },
+  {
+    "Num": 102,
+    "Name": "Lobby",
+    "Area": 3521.83630313468,
+    "Level": 1
+  },
+  {
+    "Num": 103,
+    "Name": "Conference",
+    "Area": 507.724345164352,
+    "Level": 1
+  },
+  {
+    "Num": 104,
+    "Name": "Instruction",
+    "Area": 516.563673057281,
+    "Level": 1
+  },
+  {
+    "Num": 105,
+    "Name": "Instruction",
+    "Area": 1045.36906339314,
+    "Level": 1
+  },
+  {
+    "Num": 106,
+    "Name": "Instruction",
+    "Area": 516.563673057284,
+    "Level": 1
+  },
+  {
+    "Num": 107,
+    "Name": "Corridor",
+    "Area": 1479.81687510322,
+    "Level": 1
+  },
+  {
+    "Num": 108,
+    "Name": "Instruction",
+    "Area": 962.996841820101,
+    "Level": 1
+  },
+  {
+    "Num": 109,
+    "Name": "Women",
+    "Area": 141.245256568258,
+    "Level": 1
+  },
+  {
+    "Num": 110,
+    "Name": "Men",
+    "Area": 147.341085393975,
+    "Level": 1
+  },
+  {
+    "Num": 111,
+    "Name": "Lounge",
+    "Area": 414.271370522069,
+    "Level": 1
+  },
+  {
+    "Num": 112,
+    "Name": "Electrical",
+    "Area": 76.1820475815853,
+    "Level": 1
+  },
+  {
+    "Num": 114,
+    "Name": "Stair",
+    "Area": 206.46880877095,
+    "Level": 1
+  },
+  {
+    "Num": 115,
+    "Name": "Instruction",
+    "Area": 1363.76789649097,
+    "Level": 1
+  },
+  {
+    "Num": 116,
+    "Name": "Conference",
+    "Area": 339.787972283666,
+    "Level": 1
+  },
+  {
+    "Num": 117,
+    "Name": "Instruction",
+    "Area": 522.684531696577,
+    "Level": 1
+  },
+  {
+    "Num": 118,
+    "Name": "Electrical",
+    "Area": 187.055002929239,
+    "Level": 1
+  },
+  {
+    "Num": 119,
+    "Name": "Sprinkler",
+    "Area": 95.8044129933746,
+    "Level": 1
+  },
+  {
+    "Num": 120,
+    "Name": "Lounge",
+    "Area": 439.942833988665,
+    "Level": 1
+  },
+  {
+    "Num": 121,
+    "Name": "Cafeteria",
+    "Area": 1581.87050435682,
+    "Level": 1
+  },
+  {
+    "Num": 122,
+    "Name": "Prep/Dish",
+    "Area": 239.051889475305,
+    "Level": 1
+  },
+  {
+    "Num": 123,
+    "Name": "Conference",
+    "Area": 446.719514402262,
+    "Level": 1
+  },
+  {
+    "Num": 124,
+    "Name": "Dry Storage",
+    "Area": 91.0918711594359,
+    "Level": 1
+  },
+  {
+    "Num": 125,
+    "Name": "Electrical",
+    "Area": 61.2502660332125,
+    "Level": 1
+  },
+  {
+    "Num": 126,
+    "Name": "Admin",
+    "Area": 169.089456494579,
+    "Level": 1
+  },
+  {
+    "Num": 127,
+    "Name": "Office",
+    "Area": 165.32744042575,
+    "Level": 1
+  },
+  {
+    "Num": 128,
+    "Name": "Storage",
+    "Area": 104.412953806102,
+    "Level": 1
+  },
+  {
+    "Num": 129,
+    "Name": "Toilet",
+    "Area": 60.0159764776683,
+    "Level": 1
+  },
+  {
+    "Num": 130,
+    "Name": "Stair",
+    "Area": 203.62713642094,
+    "Level": 1
+  },
+  {
+    "Num": 131,
+    "Name": "Corridor",
+    "Area": 587.971950294723,
+    "Level": 1
+  },
+  {
+    "Num": 132,
+    "Name": "Stair",
+    "Area": 206.468808770944,
+    "Level": 1
+  },
+  {
+    "Num": 201,
+    "Name": "Stair",
+    "Area": 209.310481120956,
+    "Level": 2
+  },
+  {
+    "Num": 202,
+    "Name": "Instruction",
+    "Area": 330.948644390732,
+    "Level": 2
+  },
+  {
+    "Num": 203,
+    "Name": "Computer Lab",
+    "Area": 341.309684268667,
+    "Level": 2
+  },
+  {
+    "Num": 204,
+    "Name": "Instruction",
+    "Area": 516.32134042703,
+    "Level": 2
+  },
+  {
+    "Num": 205,
+    "Name": "Instruction",
+    "Area": 339.787972283662,
+    "Level": 2
+  },
+  {
+    "Num": 206,
+    "Name": "Lounge",
+    "Area": 339.787972283662,
+    "Level": 2
+  },
+  {
+    "Num": 207,
+    "Name": "Copy/Print",
+    "Area": 341.309684268669,
+    "Level": 2
+  },
+  {
+    "Num": 208,
+    "Name": "Drafting",
+    "Area": 516.563673057285,
+    "Level": 2
+  },
+  {
+    "Num": 209,
+    "Name": "Computer Lab",
+    "Area": 786.221141046479,
+    "Level": 2
+  },
+  {
+    "Num": 210,
+    "Name": "Men",
+    "Area": 141.245256568258,
+    "Level": 2
+  },
+  {
+    "Num": 211,
+    "Name": "Women",
+    "Area": 147.341085393975,
+    "Level": 2
+  },
+  {
+    "Num": 212,
+    "Name": "Lounge",
+    "Area": 414.271370522069,
+    "Level": 2
+  },
+  {
+    "Num": 214,
+    "Name": "Electrical",
+    "Area": 76.1820475815853,
+    "Level": 2
+  },
+  {
+    "Num": 216,
+    "Name": "Lobby",
+    "Area": 3063.26757352172,
+    "Level": 2
+  },
+  {
+    "Num": 217,
+    "Name": "Stair",
+    "Area": 206.46880877095,
+    "Level": 2
+  },
+  {
+    "Num": 218,
+    "Name": "Instruction",
+    "Area": 1009.45563895123,
+    "Level": 2
+  },
+  {
+    "Num": 219,
+    "Name": "Library",
+    "Area": 1315.48101425074,
+    "Level": 2
+  },
+  {
+    "Num": 220,
+    "Name": "Electrical",
+    "Area": 170.910254928149,
+    "Level": 2
+  },
+  {
+    "Num": 221,
+    "Name": "Instruction",
+    "Area": 440.405239490424,
+    "Level": 2
+  },
+  {
+    "Num": 222,
+    "Name": "Computer Lab",
+    "Area": 593.041670472895,
+    "Level": 2
+  },
+  {
+    "Num": 223,
+    "Name": "Lounge",
+    "Area": 1434.18238565152,
+    "Level": 2
+  },
+  {
+    "Num": 224,
+    "Name": "Caferteria",
+    "Area": 376.060725471333,
+    "Level": 2
+  },
+  {
+    "Num": 225,
+    "Name": "Women",
+    "Area": 73.4023269287207,
+    "Level": 2
+  },
+  {
+    "Num": 226,
+    "Name": "Men",
+    "Area": 76.4001613940716,
+    "Level": 2
+  },
+  {
+    "Num": 227,
+    "Name": "Electrical",
+    "Area": 56.1313100244147,
+    "Level": 2
+  },
+  {
+    "Num": 228,
+    "Name": "Copy/Print",
+    "Area": 132.698911144349,
+    "Level": 2
+  },
+  {
+    "Num": 229,
+    "Name": "Administration",
+    "Area": 434.833421972496,
+    "Level": 2
+  },
+  {
+    "Num": 230,
+    "Name": "Office",
+    "Area": 159.47240709555,
+    "Level": 2
+  },
+  {
+    "Num": 231,
+    "Name": "Office",
+    "Area": 274.429526792573,
+    "Level": 2
+  },
+  {
+    "Num": 232,
+    "Name": "Toilet",
+    "Area": 60.0159764776684,
+    "Level": 2
+  },
+  {
+    "Num": 233,
+    "Name": "Stair",
+    "Area": 206.468808770951,
+    "Level": 2
+  },
+  {
+    "Num": 234,
+    "Name": "Corridor",
+    "Area": 1243.89475195547,
+    "Level": 2
+  },
+  {
+    "Num": 235,
+    "Name": "Corridor",
+    "Area": 1481.23684979627,
+    "Level": 2
+  },
+  {
+    "Num": 301,
+    "Name": "Stair",
+    "Area": 209.310481120956,
+    "Level": 3
+  },
+  {
+    "Num": 302,
+    "Name": "Instruction",
+    "Area": 859.754034726585,
+    "Level": 3
+  },
+  {
+    "Num": 303,
+    "Name": "Instruction",
+    "Area": 693.339373830902,
+    "Level": 3
+  },
+  {
+    "Num": 304,
+    "Name": "Instruction",
+    "Area": 516.563673057283,
+    "Level": 3
+  },
+  {
+    "Num": 305,
+    "Name": "Instruction",
+    "Area": 693.339373830906,
+    "Level": 3
+  },
+  {
+    "Num": 306,
+    "Name": "Instruction",
+    "Area": 786.221141046479,
+    "Level": 3
+  },
+  {
+    "Num": 307,
+    "Name": "Men",
+    "Area": 141.245256568258,
+    "Level": 3
+  },
+  {
+    "Num": 308,
+    "Name": "Women",
+    "Area": 147.341085393975,
+    "Level": 3
+  },
+  {
+    "Num": 309,
+    "Name": "Lounge",
+    "Area": 414.271370522069,
+    "Level": 3
+  },
+  {
+    "Num": 310,
+    "Name": "Electrical",
+    "Area": 75.4211915890821,
+    "Level": 3
+  },
+  {
+    "Num": 311,
+    "Name": "Lobby",
+    "Area": 1483.33456457148,
+    "Level": 3
+  },
+  {
+    "Num": 312,
+    "Name": "Stair",
+    "Area": 206.46880877095,
+    "Level": 3
+  },
+  {
+    "Num": 313,
+    "Name": "Instruction",
+    "Area": 834.201650162609,
+    "Level": 3
+  },
+  {
+    "Num": 314,
+    "Name": "Instruction",
+    "Area": 868.593362619528,
+    "Level": 3
+  },
+  {
+    "Num": 315,
+    "Name": "Instruction",
+    "Area": 522.684531696577,
+    "Level": 3
+  },
+  {
+    "Num": 316,
+    "Name": "Storage",
+    "Area": 74.2764418688554,
+    "Level": 3
+  },
+  {
+    "Num": 317,
+    "Name": "Electrical",
+    "Area": 171.299370289713,
+    "Level": 3
+  },
+  {
+    "Num": 318,
+    "Name": "Lobby",
+    "Area": 3478.85209265628,
+    "Level": 3
+  },
+  {
+    "Num": 319,
+    "Name": "Media Review",
+    "Area": 475.32982322848,
+    "Level": 3
+  },
+  {
+    "Num": 320,
+    "Name": "Media Review",
+    "Area": 565.374182412226,
+    "Level": 3
+  },
+  {
+    "Num": 321,
+    "Name": "Open Office",
+    "Area": 1415.72621497575,
+    "Level": 3
+  },
+  {
+    "Num": 322,
+    "Name": "Administration",
+    "Area": 632.805713246407,
+    "Level": 3
+  },
+  {
+    "Num": 323,
+    "Name": "Electrical",
+    "Area": 60.2972525098546,
+    "Level": 3
+  },
+  {
+    "Num": 324,
+    "Name": "Advisors",
+    "Area": 539.9629019738,
+    "Level": 3
+  },
+  {
+    "Num": 325,
+    "Name": "Conference",
+    "Area": 645.065275962764,
+    "Level": 3
+  },
+  {
+    "Num": 326,
+    "Name": "Toilet",
+    "Area": 60.0159764776684,
+    "Level": 3
+  },
+  {
+    "Num": 327,
+    "Name": "Stair",
+    "Area": 206.468808770951,
+    "Level": 3
+  },
+  {
+    "Num": 328,
+    "Name": "Corridor",
+    "Area": 590.721435980057,
+    "Level": 3
+  }
+ ]
+var i 
+var area_list = []
+for (i=0; i < nodes_data.length; i++) {
+    x = nodes_data[i].Area;
+    area_list.push(x);
+}
+var max_val = Math.max.apply(Math, area_list);
+var min_val = Math.min.apply(Math, area_list);
+
+var linscale = d3.scaleLinear()
+                .domain([min_val, max_val])
+                .range([5,30])
+
+var links_data = [
+  {
+    "source": 107,
+    "target": 102
+  },
+  {
+    "source": 107,
+    "target": 103
+  },
+  {
+    "source": 107,
+    "target": 104
+  },
+  {
+    "source": 107,
+    "target": 105
+  },
+  {
+    "source": 107,
+    "target": 106
+  },
+  {
+    "source": 107,
+    "target": 107
+  },
+  {
+    "source": 107,
+    "target": 108
+  },
+  {
+    "source": 107,
+    "target": 109
+  },
+  {
+    "source": 107,
+    "target": 110
+  },
+  {
+    "source": 107,
+    "target": 132
+  },
+  {
+    "source": 102,
+    "target": 120
+  },
+  {
+    "source": 102,
+    "target": 121
+  },
+  {
+    "source": 102,
+    "target": 101
+  },
+  {
+    "source": 102,
+    "target": 111
+  },
+  {
+    "source": 102,
+    "target": 112
+  },
+  {
+    "source": 102,
+    "target": 112
+  },
+  {
+    "source": 102,
+    "target": 114
+  },
+  {
+    "source": 102,
+    "target": 115
+  },
+  {
+    "source": 102,
+    "target": 116
+  },
+  {
+    "source": 102,
+    "target": 117
+  },
+  {
+    "source": 102,
+    "target": 118
+  },
+  {
+    "source": 102,
+    "target": 119
+  },
+  {
+    "source": 102,
+    "target": 131
+  },
+  {
+    "source": 131,
+    "target": 122
+  },
+  {
+    "source": 131,
+    "target": 123
+  },
+  {
+    "source": 131,
+    "target": 124
+  },
+  {
+    "source": 131,
+    "target": 125
+  },
+  {
+    "source": 131,
+    "target": 126
+  },
+  {
+    "source": 131,
+    "target": 127
+  },
+  {
+    "source": 131,
+    "target": 128
+  },
+  {
+    "source": 131,
+    "target": 129
+  },
+  {
+    "source": 131,
+    "target": 130
+  },
+  {
+    "source": 132,
+    "target": 103
+  },
+  {
+    "source": 103,
+    "target": 104
+  },
+  {
+    "source": 104,
+    "target": 105
+  },
+  {
+    "source": 105,
+    "target": 106
+  },
+  {
+    "source": 106,
+    "target": 107
+  },
+  {
+    "source": 107,
+    "target": 108
+  },
+  {
+    "source": 108,
+    "target": 109
+  },
+  {
+    "source": 109,
+    "target": 110
+  },
+  {
+    "source": 110,
+    "target": 111
+  },
+  {
+    "source": 111,
+    "target": 112
+  },
+  {
+    "source": 111,
+    "target": 114
+  },
+  {
+    "source": 114,
+    "target": 115
+  },
+  {
+    "source": 115,
+    "target": 116
+  },
+  {
+    "source": 116,
+    "target": 117
+  },
+  {
+    "source": 117,
+    "target": 118
+  },
+  {
+    "source": 118,
+    "target": 119
+  },
+  {
+    "source": 118,
+    "target": 101
+  },
+  {
+    "source": 119,
+    "target": 101
+  },
+  {
+    "source": 101,
+    "target": 121
+  },
+  {
+    "source": 121,
+    "target": 122
+  },
+  {
+    "source": 122,
+    "target": 123
+  },
+  {
+    "source": 123,
+    "target": 124
+  },
+  {
+    "source": 124,
+    "target": 125
+  },
+  {
+    "source": 125,
+    "target": 126
+  },
+  {
+    "source": 126,
+    "target": 127
+  },
+  {
+    "source": 127,
+    "target": 128
+  },
+  {
+    "source": 128,
+    "target": 129
+  },
+  {
+    "source": 129,
+    "target": 130
+  },
+  {
+    "source": 235,
+    "target": 201
+  },
+  {
+    "source": 235,
+    "target": 202
+  },
+  {
+    "source": 235,
+    "target": 203
+  },
+  {
+    "source": 235,
+    "target": 204
+  },
+  {
+    "source": 235,
+    "target": 205
+  },
+  {
+    "source": 235,
+    "target": 206
+  },
+  {
+    "source": 235,
+    "target": 207
+  },
+  {
+    "source": 235,
+    "target": 208
+  },
+  {
+    "source": 235,
+    "target": 209
+  },
+  {
+    "source": 235,
+    "target": 210
+  },
+  {
+    "source": 235,
+    "target": 211
+  },
+  {
+    "source": 201,
+    "target": 202
+  },
+  {
+    "source": 202,
+    "target": 203
+  },
+  {
+    "source": 203,
+    "target": 204
+  },
+  {
+    "source": 204,
+    "target": 205
+  },
+  {
+    "source": 205,
+    "target": 206
+  },
+  {
+    "source": 206,
+    "target": 207
+  },
+  {
+    "source": 207,
+    "target": 208
+  },
+  {
+    "source": 208,
+    "target": 209
+  },
+  {
+    "source": 209,
+    "target": 210
+  },
+  {
+    "source": 210,
+    "target": 211
+  },
+  {
+    "source": 211,
+    "target": 212
+  },
+  {
+    "source": 216,
+    "target": 212
+  },
+  {
+    "source": 216,
+    "target": 214
+  },
+  {
+    "source": 212,
+    "target": 214
+  },
+  {
+    "source": 214,
+    "target": 217
+  },
+  {
+    "source": 217,
+    "target": 218
+  },
+  {
+    "source": 218,
+    "target": 219
+  },
+  {
+    "source": 219,
+    "target": 220
+  },
+  {
+    "source": 220,
+    "target": 221
+  },
+  {
+    "source": 221,
+    "target": 222
+  },
+  {
+    "source": 222,
+    "target": 223
+  },
+  {
+    "source": 216,
+    "target": 217
+  },
+  {
+    "source": 216,
+    "target": 218
+  },
+  {
+    "source": 216,
+    "target": 219
+  },
+  {
+    "source": 216,
+    "target": 220
+  },
+  {
+    "source": 216,
+    "target": 221
+  },
+  {
+    "source": 216,
+    "target": 222
+  },
+  {
+    "source": 234,
+    "target": 223
+  },
+  {
+    "source": 234,
+    "target": 224
+  },
+  {
+    "source": 234,
+    "target": 225
+  },
+  {
+    "source": 234,
+    "target": 226
+  },
+  {
+    "source": 234,
+    "target": 227
+  },
+  {
+    "source": 234,
+    "target": 228
+  },
+  {
+    "source": 234,
+    "target": 229
+  },
+  {
+    "source": 234,
+    "target": 230
+  },
+  {
+    "source": 234,
+    "target": 231
+  },
+  {
+    "source": 234,
+    "target": 232
+  },
+  {
+    "source": 234,
+    "target": 233
+  },
+  {
+    "source": 223,
+    "target": 224
+  },
+  {
+    "source": 224,
+    "target": 225
+  },
+  {
+    "source": 225,
+    "target": 226
+  },
+  {
+    "source": 226,
+    "target": 227
+  },
+  {
+    "source": 227,
+    "target": 228
+  },
+  {
+    "source": 228,
+    "target": 229
+  },
+  {
+    "source": 229,
+    "target": 230
+  },
+  {
+    "source": 230,
+    "target": 231
+  },
+  {
+    "source": 231,
+    "target": 232
+  },
+  {
+    "source": 232,
+    "target": 233
+  },
+  {
+    "source": 132,
+    "target": 201
+  },
+  {
+    "source": 114,
+    "target": 217
+  },
+  {
+    "source": 130,
+    "target": 233
+  },
+  {
+    "source": 311,
+    "target": 301
+  },
+  {
+    "source": 311,
+    "target": 302
+  },
+  {
+    "source": 311,
+    "target": 303
+  },
+  {
+    "source": 311,
+    "target": 304
+  },
+  {
+    "source": 311,
+    "target": 305
+  },
+  {
+    "source": 311,
+    "target": 306
+  },
+  {
+    "source": 311,
+    "target": 307
+  },
+  {
+    "source": 311,
+    "target": 308
+  },
+  {
+    "source": 301,
+    "target": 302
+  },
+  {
+    "source": 302,
+    "target": 303
+  },
+  {
+    "source": 303,
+    "target": 304
+  },
+  {
+    "source": 304,
+    "target": 305
+  },
+  {
+    "source": 305,
+    "target": 306
+  },
+  {
+    "source": 306,
+    "target": 307
+  },
+  {
+    "source": 307,
+    "target": 308
+  },
+  {
+    "source": 308,
+    "target": 309
+  },
+  {
+    "source": 318,
+    "target": 309
+  },
+  {
+    "source": 318,
+    "target": 310
+  },
+  {
+    "source": 309,
+    "target": 310
+  },
+  {
+    "source": 310,
+    "target": 312
+  },
+  {
+    "source": 318,
+    "target": 312
+  },
+  {
+    "source": 318,
+    "target": 313
+  },
+  {
+    "source": 318,
+    "target": 314
+  },
+  {
+    "source": 318,
+    "target": 315
+  },
+  {
+    "source": 318,
+    "target": 316
+  },
+  {
+    "source": 318,
+    "target": 317
+  },
+  {
+    "source": 312,
+    "target": 313
+  },
+  {
+    "source": 313,
+    "target": 314
+  },
+  {
+    "source": 314,
+    "target": 315
+  },
+  {
+    "source": 315,
+    "target": 316
+  },
+  {
+    "source": 316,
+    "target": 317
+  },
+  {
+    "source": 318,
+    "target": 319
+  },
+  {
+    "source": 318,
+    "target": 320
+  },
+  {
+    "source": 318,
+    "target": 321
+  },
+  {
+    "source": 319,
+    "target": 320
+  },
+  {
+    "source": 320,
+    "target": 321
+  },
+  {
+    "source": 321,
+    "target": 322
+  },
+  {
+    "source": 328,
+    "target": 322
+  },
+  {
+    "source": 328,
+    "target": 323
+  },
+  {
+    "source": 328,
+    "target": 324
+  },
+  {
+    "source": 328,
+    "target": 325
+  },
+  {
+    "source": 328,
+    "target": 326
+  },
+  {
+    "source": 328,
+    "target": 327
+  },
+  {
+    "source": 322,
+    "target": 323
+  },
+  {
+    "source": 323,
+    "target": 324
+  },
+  {
+    "source": 324,
+    "target": 325
+  },
+  {
+    "source": 325,
+    "target": 326
+  },
+  {
+    "source": 326,
+    "target": 327
+  },
+  {
+    "source": 201,
+    "target": 301
+  },
+  {
+    "source": 217,
+    "target": 312
+  },
+  {
+    "source": 233,
+    "target": 327
+  }
+]
+
+//set up the simulation and add forces  
+var simulation = d3.forceSimulation()
+					.nodes(nodes_data);
+                              
+var link_force =  d3.forceLink(links_data)
+                        .id(function(d) { return d.Num; });            
+         
+var charge_force = d3.forceManyBody()
+    .strength(-100); 
+    
+var center_force = d3.forceCenter(width / 2, height / 2);  
+                      
+simulation
+    .force("charge_force", charge_force)
+    .force("center_force", center_force)
+    .force("links",link_force)
+ ;
+        
+//add tick instructions: 
+simulation.on("tick", tickActions );
+
+//add encompassing group for the zoom 
+var g = svg.append("g")
+    .attr("class", "everything");
+
+//draw lines for the links 
+var link = g.append("g")
+      .attr("class", "links")
+    .selectAll("line")
+    .data(links_data)
+    .enter().append("line")
+      .attr("stroke-width", 1)      
+      .style("stroke", "black"); 
+//draw circles for the nodes 
+var node = g.selectAll(".node")
+        .data(nodes_data)
+        .enter().append("g")
+        .attr("class", "node")
+        .call(d3.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended));
+                
+node.append("circle")
+    .attr("r", (function(d) { return linscale(d.Area)}))
+    .attr("fill", function(d) {if (d.Level == 1) return "green";
+                               else if (d.Level == 2) return "red";
+                               else return "blue";});
+//labels for the nodes    
+node.append("text")
+      .text(function(d) {
+        return d.Name;
+      })
+      .attr('dx', 20)
+      .attr('dy', 10);
+
+//add zoom capabilities 
+var zoom_handler = d3.zoom()
+    .on("zoom", zoom_actions);
+
+zoom_handler(svg);     
+
+/** Functions **/
+
+//Drag functions 
+//d is the node 
+function dragstarted(d) {
+  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragged(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended(d) {
+  if (!d3.event.active) simulation.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+}
+
+//Zoom functions 
+function zoom_actions(){
+    g.attr("transform", d3.event.transform)
+}
+
+function tickActions() {
+    //update circle positions each tick of the simulation 
+       node
+        .attr("transform", function(d) {
+          return "translate(" + d.x + "," + d.y + ")";
+        })
+        
+    //update link positions 
+    link
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+} 
+</script>
